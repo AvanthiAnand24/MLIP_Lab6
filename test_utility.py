@@ -38,4 +38,21 @@ def feature_target_sample(housing_data_sample):
 def test_data_split(feature_target_sample):
     return_tuple = data_split(*feature_target_sample)
     # TODO test if the length of return_tuple is 4
-    raise NotImplemented
+    # Ensure the function returns 4 items
+    assert len(return_tuple) == 4, "data_split should return 4 elements"
+
+    # Extract the returned values
+    X_train, X_test, y_train, y_test = return_tuple
+
+    # Ensure returned data types are correct
+    assert isinstance(X_train, pd.DataFrame), "X_train should be a DataFrame"
+    assert isinstance(X_test, pd.DataFrame), "X_test should be a DataFrame"
+    assert isinstance(y_train, pd.Series), "y_train should be a Series"
+    assert isinstance(y_test, pd.Series), "y_test should be a Series"
+
+    # Ensure train-test split ratio (80-20 split for 2 samples means 1 train, 1 test)
+    assert X_train.shape[0] == 1, "X_train should have 1 sample"
+    assert X_test.shape[0] == 1, "X_test should have 1 sample"
+    assert y_train.shape[0] == 1, "y_train should have 1 sample"
+    assert y_test.shape[0] == 1, "y_test should have 1 sample"
+    # raise NotImplemented

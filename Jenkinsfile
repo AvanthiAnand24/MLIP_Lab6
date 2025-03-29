@@ -54,7 +54,7 @@ pipeline {
                 # Run pytest
                 pytest --junitxml=pytest-report.xml || { echo "Tests failed"; exit 1; }
                 '''
-                junit 'pytest-report.xml'  # Store test results in Jenkins
+                junit 'pytest-report.xml'  // Store test results in Jenkins
             }
         }
 

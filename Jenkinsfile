@@ -34,23 +34,27 @@ pipeline {
         // }
         stage('Test') {
             steps {
-                sh '''#!/bin/bash
-                echo 'Test Step: Running pytest'
+                sh '''
+                echo "Test Step: Running pytest"
 
-                # Manually add Conda to PATH
-                export PATH=/opt/homebrew/bin:$PATH
-
-                # Initialize Conda in this shell session
-                source /opt/homebrew/etc/profile.d/conda.sh  # Ensure Conda functions properly
+                # Initialize Conda
+                source /opt/homebrew/etc/profile.d/conda.sh || echo "Conda profile script not found"
 
                 # Activate Conda environment
-                conda activate mlip
+                conda activate mlip || { echo "Failed to activate conda env"; exit 1; }
+
+                # Verify Python and pytest
+                which python
+                python --version
+                which pytest
+
+                # Install pytest if missing
+                pip install pytest || { echo "pytest installation failed"; exit 1; }
 
                 # Run pytest
-                pytest --maxfail=1 --disable-warnings --tb=short
-
-                echo 'Tests completed successfully'
+                pytest --junitxml=pytest-report.xml || { echo "Tests failed"; exit 1; }
                 '''
+                junit 'pytest-report.xml'  # Store test results in Jenkins
             }
         }
 
